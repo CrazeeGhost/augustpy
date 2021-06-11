@@ -40,17 +40,33 @@ class Lock:
                 self.session.set_write(characteristic)
             elif characteristic.uuid == self.READ_CHARACTERISTIC:
                 self.session.set_read(characteristic)
+                #descs = characteristic.getDescriptors() 
+                #for desc in descs:
+                    #print("found  desc: " + str(desc.uuid))
+                    #str_uuid = str(desc.uuid).lower()
+                    #if str_uuid.startswith("00002902"):
+                        #mcu_sub_handle = desc.handle
+                mcu_sub_handle = 21
+                        #print("*** Found MCU subscribe handle: " + str(mcu_sub_handle))
             elif characteristic.uuid == self.SECURE_WRITE_CHARACTERISTIC:
                 self.secure_session.set_write(characteristic)
             elif characteristic.uuid == self.SECURE_READ_CHARACTERISTIC:
                 self.secure_session.set_read(characteristic)
+                #descs = characteristic.getDescriptors()
+                #for desc in descs:
+                    #print("found  desc: " + str(desc.uuid))
+                    #str_uuid = str(desc.uuid).lower()
+                    #if str_uuid.startswith("00002902"):
+                        #sec_sub_handle = desc.handle
+                sec_sub_handle = 26
+                        #print("*** Found SEC subscribe handle: " + str(sec_sub_handle))
 
-        response = self.peripheral.writeCharacteristic(26, b'\x02\x00', withResponse = True)
-        print("Subscription SEC request response: ", response)
-        
-        response = self.peripheral.writeCharacteristic(21, b'\x02\x00', withResponse = True)
-        print("Subscription MCU request response: ", response)
-                
+        response = self.peripheral.writeCharacteristic(sec_sub_handle, b'\x02\x00', withResponse=True)
+        print("Subscription SEC request response: ",response)
+
+        response = self.peripheral.writeCharacteristic(mcu_sub_handle, b'\x02\x00', withResponse=True)
+        print("Subscription MCU request response: ",response)
+
         self.secure_session.set_key(self.key)
 
         handshake_keys = Cryptodome.Random.get_random_bytes(16)
