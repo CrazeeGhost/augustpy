@@ -29,6 +29,8 @@ parser.add_argument('--unlock', dest='action', action='store_const',
                    const='unlock', help='Lock the lock')
 parser.add_argument('--status', dest='action', action='store_const',
                    const='status', help='Request lock status')
+parser.add_argument('--disco', dest='disco', action='store_const',
+                   const='disco', help='Disconnect from the lock')
 parser.set_defaults(action='status')
 
 args = parser.parse_args()
@@ -39,9 +41,14 @@ for lock in locks:
         if args.action == 'lock':
             lock.lock()
             print('locked')
+            time.sleep(4)
         elif args.action == 'unlock':
             lock.unlock()
             print('unlocked')
+            time.sleep(4)
         elif args.action == 'status':
             print(lock.status())
-        lock.disconnect()
+            time.sleep(4)
+        elif args.action == 'disco':
+            print(str(lock.disconnect()))
+        print("\n" + str(lock.disconnect()))
